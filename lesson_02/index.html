@@ -17,7 +17,7 @@
         <meta name="author" content="MasterGroosha">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.3">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.12">
     
     
       
@@ -25,14 +25,14 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.947af8d5.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.4dd2dd8d.min.css">
       
-        <link rel="stylesheet" href="../assets/stylesheets/palette.7f672a1f.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.6a5ad368.min.css">
       
       
         
         
-        <meta name="theme-color" content="#009688">
+        <meta name="theme-color" content="#009485">
       
     
     
@@ -229,6 +229,21 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    Текст
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -243,10 +258,53 @@
                   
                 
                 
-                <h1 id="2">2. Работа с текстом<a class="headerlink" href="#2" title="Permanent link">&para;</a></h1>
-<p>Несмотря на то, что Telegram поддерживает множество различных типов сообщений (изображения, видео, гифки, геолокации и т.д.), 
-работа с текстами является одной из важнейших задач практически любого бота. В этом уроке поговорим о том, как работать с текстовыми 
-сообщениями и как не «падать» от действий излишне оригинальных пользователей.</p>
+                <h1 id="2">2. Работа с сообщениями<a class="headerlink" href="#2" title="Permanent link">&para;</a></h1>
+<p>В этом уроке мы разберёмся, как обрабатывать текстовые сообщения и медиафайлы, рассмотрим различные варианты форматирования 
+текстов. </p>
+<h2 id="_1">Текст<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>Обработка текстовых сообщений — это, пожалуй, одно из важнейших действий у большинства ботов. Текстом можно выразить 
+практически что угодно и при этом подавать информацию хочется <em>красиво</em>. В распоряжении у разработчика имеется три способа 
+разметки текста: HTML, Markdown и MarkdownV2. Наиболее продвинутыми из них считаются HTML и MarkdownV2, «классический» 
+маркдаун оставлен для обеспечения обратной совместимости и поддерживает меньше возможностей.</p>
+<p>За выбор форматирования при отправке сообщений отвечает аргумент <code>parse_mode</code>, например:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">aiogram</span> <span class="kn">import</span> <span class="n">types</span>
+
+<span class="c1"># где-то в функции...</span>
+<span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="s2">&quot;Hello, &lt;b&gt;world&lt;/b&gt;!&quot;</span><span class="p">,</span> <span class="n">parse_mode</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">ParseMode</span><span class="o">.</span><span class="n">HTML</span><span class="p">)</span>
+<span class="c1"># Вместо Enum-а можно задать parse_mode в виде обычной строки:</span>
+<span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="s2">&quot;Hello, *world*\!&quot;</span><span class="p">,</span> <span class="n">parse_mode</span><span class="o">=</span><span class="s2">&quot;MarkdownV2&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><img alt="Hello world с разным форматированием" src="../images/l02_1.png" /></p>
+<p>Если в боте повсеместно используется определённое форматирование, то каждый раз указывать аргумент <code>parse_mode</code> довольно 
+накладно. К счастью, в aiogram можно передать необходимый тип прямо в объект <strong>Bot</strong>, а если в каком-то конкретном случае 
+нужно обойтись без этих ваших разметок, то просто укажите <code>parse_mode=""</code> (пустая строка):</p>
+<div class="codehilite"><pre><span></span><code><span class="n">bot</span> <span class="o">=</span> <span class="n">Bot</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="s2">&quot;123:abcxyz&quot;</span><span class="p">,</span> <span class="n">parse_mode</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">ParseMode</span><span class="o">.</span><span class="n">HTML</span><span class="p">)</span>
+
+<span class="c1"># где-то в функции...</span>
+<span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="s2">&quot;Сообщение с &lt;u&gt;HTML-разметкой&lt;/u&gt;&quot;</span><span class="p">)</span>
+<span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="s2">&quot;Сообщение без &lt;s&gt;какой-либо разметки&lt;/s&gt;&quot;</span><span class="p">,</span> <span class="n">parse_mode</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><img alt="Настройка типа разметки по умолчанию" src="../images/l02_2.png" /></p>
+<p>Aiogram позволяет извлекать текст как простое содержимое (plain text), как HTML и как Markdown. Сравнить можно на скриншоте 
+ниже. Это удобно использовать, например, если вы хотите вернуть отправителю его текст с небольшими изменениями:</p>
+<div class="codehilite"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">()</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">any_text_message</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span>
+    <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">md_text</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">html_text</span><span class="p">)</span>
+    <span class="c1"># Дополняем исходный текст:</span>
+    <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;&lt;u&gt;Ваш текст&lt;/u&gt;:</span><span class="se">\n\n</span><span class="si">{</span><span class="n">message</span><span class="o">.</span><span class="n">html_text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">parse_mode</span><span class="o">=</span><span class="s2">&quot;HTML&quot;</span>
+    <span class="p">)</span>
+</code></pre></div>
+
+
+<p><img alt="Настройка типа разметки по умолчанию" src="../images/l02_3.png" /></p>
+<p>todo: скрытые ссылки</p>
                 
               
               
@@ -304,15 +362,15 @@
       
     </div>
     
-      <script src="../assets/javascripts/vendor.c3dc8c49.min.js"></script>
-      <script src="../assets/javascripts/bundle.f9edbbd5.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "search.config.lang": "ru", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e # \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439"}</script>
+      <script src="../assets/javascripts/vendor.3636a4ec.min.js"></script>
+      <script src="../assets/javascripts/bundle.e9fe3281.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "search.config.lang": "ru", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e # \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439"}</script>
       
       <script>
         app = initialize({
           base: "..",
           features: [],
           search: Object.assign({
-            worker: "../assets/javascripts/worker/search.8e2cddea.min.js"
+            worker: "../assets/javascripts/worker/search.5eca75d3.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>
