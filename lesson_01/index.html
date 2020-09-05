@@ -252,6 +252,13 @@
       
         <li class="md-nav__item">
   <a href="#_3" class="md-nav__link">
+    Обработка ошибок
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
     Синтаксический сахар
   </a>
   
@@ -303,6 +310,13 @@
       
         <li class="md-nav__item">
   <a href="#_3" class="md-nav__link">
+    Обработка ошибок
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
     Синтаксический сахар
   </a>
   
@@ -438,7 +452,38 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
 
 <p>Снова запустим бота:<br />
 <img alt="Обе команды работают" src="../images/l01_2.jpg" /></p>
-<h2 id="_3">Синтаксический сахар<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h2 id="_3">Обработка ошибок<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>При работе бота неизбежно возникновение различных ошибок, связанных не с кодом, а с внешними событиями. Простейший пример: 
+попытка отправить сообщение пользователю, заблокировавшему бота. Оборачивать каждый вызов в try..except некрасиво, поэтому 
+в aiogram существует специальный хэндлер для исключений, связанных с Bot API.<br />
+Рассмотрим следующий пример кода, имитирующий задержку перед ответом пользователю:</p>
+<div class="codehilite"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="s2">&quot;block&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">cmd_block</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>  <span class="c1"># Здоровый сон на 10 секунд</span>
+    <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">reply</span><span class="p">(</span><span class="s2">&quot;Вы заблокированы&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>За эти 10 секунд пользователь может успеть заблокировать бота со своей стороны и попытка вызвать метод <code>reply</code> приведёт 
+к появлению исключения <code>BotBlocked</code>. Напишем специальный хэндлер для этого исключения:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">aiogram.utils.exceptions</span> <span class="kn">import</span> <span class="n">BotBlocked</span>
+
+<span class="nd">@dp</span><span class="o">.</span><span class="n">errors_handler</span><span class="p">(</span><span class="n">exception</span><span class="o">=</span><span class="n">BotBlocked</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">error_bot_blocked</span><span class="p">(</span><span class="n">update</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Update</span><span class="p">,</span> <span class="n">exception</span><span class="p">:</span> <span class="n">BotBlocked</span><span class="p">):</span>
+    <span class="c1"># Update: объект события от Telegram. Exception: объект исключения</span>
+    <span class="c1"># Здесь можно как-то обработать блокировку, например, удалить пользователя из БД</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Меня заблокировал пользователь!</span><span class="se">\n</span><span class="s2">Сообщение: </span><span class="si">{</span><span class="n">update</span><span class="si">}</span><span class="se">\n</span><span class="s2">Ошибка: </span><span class="si">{</span><span class="n">exception</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Такой хэндлер должен всегда возвращать True,</span>
+    <span class="c1"># если дальнейшая обработка не требуется.</span>
+    <span class="k">return</span> <span class="kc">True</span>
+</code></pre></div>
+
+
+<p>Аналогично пишутся обработчики и на другие исключения. Таким образом, если одна и та же непредвиденная ситуация может 
+возникнуть в различных хэндлерах, то можно вынести её обработку в отдельный хэндлер ошибок. Кода будет меньше, а оставшийся 
+станет читабельнее. </p>
+<h2 id="_4">Синтаксический сахар<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
 <p>Для того, чтобы сделать код чище и читабельнее, aiogram расширяет возможности стандартных объектов Telegram.
 Например, вместо <code>bot.send_message(...)</code> можно написать <code>message.answer(...)</code> или <code>message.reply(...)</code>. В последних
 двух случаях не нужно подставлять <code>chat_id</code>, подразумевается, что он такой же, как и в исходном сообщении.<br />
