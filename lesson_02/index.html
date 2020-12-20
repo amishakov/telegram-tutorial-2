@@ -436,7 +436,14 @@
 геолокации, стикеры и т.д. У большинства медиафайлов есть свойства <code>file_id</code> и <code>file_unique_id</code>. Первый можно использовать 
 для повторной отправки одного и того же медиафайла много раз, причём отправка будет мгновенной, т.к. сам файл уже лежит 
 на серверах Telegram. Это самый предпочтительный способ.<br />
-<code>file_id</code> уникален для каждого бота, т.е. переиспользовать чужой идентификатор нельзя. Однако в Bot API есть ещё 
+К примеру, следующий код заставит бота моментально ответить пользователю той же гифкой, что была прислана: </p>
+<div class="codehilite"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">content_types</span><span class="o">=</span><span class="p">[</span><span class="n">types</span><span class="o">.</span><span class="n">ContentType</span><span class="o">.</span><span class="n">ANIMATION</span><span class="p">])</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">echo_document</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span>
+    <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">reply_animation</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">file_id</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><code>file_id</code> уникален для каждого бота, т.е. переиспользовать чужой идентификатор нельзя. Однако в Bot API есть ещё 
 <code>file_unique_id</code>. Его нельзя использовать для повторной отправки или скачивания медиафайла, но зато он одинаковый у всех 
 ботов. Нужен <code>file_unique_id</code> обычно тогда, когда нескольким ботам требуется знать, что их собственные <code>file_id</code> односятся 
 к одному и тому же файлу.</p>
@@ -451,16 +458,11 @@
 <span class="c1"># Типы содержимого тоже можно указывать по-разному.</span>
 <span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">content_types</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;photo&quot;</span><span class="p">])</span>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">download_photo</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span>
-    <span class="c1"># Скачивание прямо в /tmp/hello без создания подкаталогов</span>
-    <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">photo</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">destination</span><span class="o">=</span><span class="s2">&quot;/tmp/somedir/&quot;</span><span class="p">,</span> <span class="n">make_dirs</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="c1"># Убедитесь, что каталог /tmp/somedir существует!</span>
+    <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">photo</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">destination</span><span class="o">=</span><span class="s2">&quot;/tmp/somedir/&quot;</span><span class="p">)</span>
 </code></pre></div>
 
 
-<div class="admonition warning">
-<p>В aiogram версии 2.9.2 существует баг, из-за которого загрузка файлов с явным указанием каталога может не работать 
-должным образом. Баг <a href="https://github.com/aiogram/aiogram/issues/143">уже исправлен</a>, но до выхода новой версии 
-фреймворка он будет присутствовать.</p>
-</div>
 <div class="admonition info">
 <p class="admonition-title">Работа с изображениями</p>
 <p>Обратите внимание на конструкцию <code>message.photo[-1]</code>. Когда пользователь присылает боту изображение, Telegram присылает 
@@ -472,7 +474,11 @@
 <p>Боты, использующие Telegram Bot API, могут скачивать файлы размером не более <a href="https://core.telegram.org/bots/api#getfile">20 мегабайт</a>. 
 Если вы планируете скачивать/заливать большие файлы, лучше рассмотрите библиотеки, взаимодействующие с 
 Telegram Client API, а не с Telegram Bot API, например, <a href="https://docs.telethon.dev/en/latest/index.html">Telethon</a>. 
-Немногие знают, но Client API могут использовать не только обычные аккаунты, но ещё и <a href="https://docs.telethon.dev/en/latest/concepts/botapi-vs-mtproto.html">боты</a>.</p>
+Немногие знают, но Client API могут использовать не только обычные аккаунты, но ещё и 
+<a href="https://docs.telethon.dev/en/latest/concepts/botapi-vs-mtproto.html">боты</a>.</p>
+<p>А начиная с Bot API версии 5.0, можно использовать 
+<a href="https://core.telegram.org/bots/api#using-a-local-bot-api-server">собственный сервер Bot API</a> для работы с 
+большими файлами.</p>
 </div>
 <h2 id="_4">Бонус<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
 <p>Бывают ситуации, когда хочется отправить длинное сообщение с картинкой, но лимит на подписи к медиафайлам составляет 
