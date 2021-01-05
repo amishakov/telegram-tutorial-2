@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://mastergroosha.github.io/telegram-tutorial-2/lesson_02/">
-      
-      
         <meta name="author" content="MasterGroosha">
       
+      
+        <link rel="canonical" href="https://mastergroosha.github.io/telegram-tutorial-2/02_messages/">
+      
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.1.7">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.3">
     
     
       
@@ -24,10 +24,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.19753c6b.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.3b61ea93.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.196e0c26.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.39b8e14a.min.css">
         
           
           
@@ -39,7 +39,7 @@
     
       
         
-        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
         <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
       
@@ -63,6 +63,7 @@
         <script>matchMedia("(prefers-color-scheme: dark)").matches&&document.body.setAttribute("data-md-color-scheme","slate")</script>
       
   
+    
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
@@ -92,18 +93,20 @@
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
     </label>
     <div class="md-header-nav__title" data-md-component="header-title">
-      
-        <div class="md-header-nav__ellipsis">
-          <span class="md-header-nav__topic md-ellipsis">
+      <div class="md-header-nav__ellipsis">
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
             Пишем Telegram-ботов на Python (v2)
           </span>
-          <span class="md-header-nav__topic md-ellipsis">
+        </div>
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
             
               Работа с сообщениями
             
           </span>
         </div>
-      
+      </div>
     </div>
     
       <label class="md-header-nav__button md-icon" for="__search">
@@ -162,7 +165,8 @@
         <div class="md-main__inner md-grid">
           
             
-              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
@@ -196,6 +200,7 @@
       
 
 
+
   <li class="md-nav__item">
     <a href=".." class="md-nav__link">
       Введение
@@ -208,8 +213,9 @@
       
 
 
+
   <li class="md-nav__item">
-    <a href="../lesson_01/" class="md-nav__link">
+    <a href="../01_quickstart/" class="md-nav__link">
       Знакомство с aiogram
     </a>
   </li>
@@ -218,6 +224,7 @@
       
       
       
+
 
   
 
@@ -284,8 +291,9 @@
       
 
 
+
   <li class="md-nav__item">
-    <a href="../lesson_03/" class="md-nav__link">
+    <a href="../03_buttons/" class="md-nav__link">
       Кнопки
     </a>
   </li>
@@ -298,7 +306,8 @@
               </div>
             
             
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -364,7 +373,6 @@
 <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="s2">&quot;Hello, *world*\!&quot;</span><span class="p">,</span> <span class="n">parse_mode</span><span class="o">=</span><span class="s2">&quot;MarkdownV2&quot;</span><span class="p">)</span>
 </code></pre></div>
 
-
 <p><img alt="Hello world с разным форматированием" src="../images/l02_1.png" /></p>
 <p>Если в боте повсеместно используется определённое форматирование, то каждый раз указывать аргумент <code>parse_mode</code> довольно 
 накладно. К счастью, в aiogram можно передать необходимый тип прямо в объект <strong>Bot</strong>, а если в каком-то конкретном случае 
@@ -375,7 +383,6 @@
 <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="s2">&quot;Сообщение с &lt;u&gt;HTML-разметкой&lt;/u&gt;&quot;</span><span class="p">)</span>
 <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="s2">&quot;Сообщение без &lt;s&gt;какой-либо разметки&lt;/s&gt;&quot;</span><span class="p">,</span> <span class="n">parse_mode</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 </code></pre></div>
-
 
 <p><img alt="Настройка типа разметки по умолчанию" src="../images/l02_2.png" /></p>
 <p>Существует и более «программный» или даже «динамический» способ формирования сообщения.
@@ -397,7 +404,6 @@
     <span class="p">)</span>
 </code></pre></div>
 
-
 <p><img alt="Динамическое форматирование" src="../images/l02_3.png" /></p>
 <p>Помимо отправки с форматированием, Aiogram позволяет извлекать входящий текст как простое содержимое (plain text), 
 как HTML и как Markdown. Сравнить можно на скриншоте ниже. 
@@ -413,7 +419,6 @@
     <span class="p">)</span>
 </code></pre></div>
 
-
 <p><img alt="Настройка типа разметки по умолчанию" src="../images/l02_4.png" /></p>
 <p>Всё бы ничего, но с использованием форматирования есть проблема: не в меру хитрые пользователи могут использовать спец. 
 символы в именах или сообщениях, ломая бота. Впрочем, в aiogram существуют методы экранирования таких символов: 
@@ -424,7 +429,6 @@
     <span class="c1"># А можно и так:</span>
     <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="n">fmt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;Привет,&quot;</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">hbold</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">text</span><span class="p">)),</span> <span class="n">parse_mode</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">ParseMode</span><span class="o">.</span><span class="n">HTML</span><span class="p">)</span>
 </code></pre></div>
-
 
 <p><img alt="Экранирование ввода" src="../images/l02_5.png" /></p>
 <div class="admonition info">
@@ -441,7 +445,6 @@
 <span class="k">async</span> <span class="k">def</span> <span class="nf">echo_document</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span>
     <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">reply_animation</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">file_id</span><span class="p">)</span>
 </code></pre></div>
-
 
 <p><code>file_id</code> уникален для каждого бота, т.е. переиспользовать чужой идентификатор нельзя. Однако в Bot API есть ещё 
 <code>file_unique_id</code>. Его нельзя использовать для повторной отправки или скачивания медиафайла, но зато он одинаковый у всех 
@@ -461,7 +464,6 @@
     <span class="c1"># Убедитесь, что каталог /tmp/somedir существует!</span>
     <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">photo</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">destination</span><span class="o">=</span><span class="s2">&quot;/tmp/somedir/&quot;</span><span class="p">)</span>
 </code></pre></div>
-
 
 <div class="admonition info">
 <p class="admonition-title">Работа с изображениями</p>
@@ -504,7 +506,6 @@ Telegram Client API, а не с Telegram Bot API, например, <a href="htt
         <span class="n">parse_mode</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">ParseMode</span><span class="o">.</span><span class="n">HTML</span><span class="p">)</span>
 </code></pre></div>
 
-
 <p><img alt="Изображение со скрытой ссылкой" src="../images/l02_6.png" /></p>
 <p>На этом всё. До следующих глав!<br />
 <s><small>Ставьте лайки, подписывайтесь, прожимайте колокольчик</small></s></p>
@@ -528,7 +529,7 @@ Telegram Client API, а не с Telegram Bot API, например, <a href="htt
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../lesson_01/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../01_quickstart/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -543,7 +544,7 @@ Telegram Client API, а не с Telegram Bot API, например, <a href="htt
           </a>
         
         
-          <a href="../lesson_03/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../03_buttons/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
@@ -602,15 +603,15 @@ Telegram Client API, а не с Telegram Bot API, например, <a href="htt
       
     </div>
     
-      <script src="../assets/javascripts/vendor.0ac82a11.min.js"></script>
-      <script src="../assets/javascripts/bundle.f81dfb4d.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "search.config.lang": "ru", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "\u041f\u043e\u0438\u0441\u043a", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e # \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      <script src="../assets/javascripts/vendor.08c56446.min.js"></script>
+      <script src="../assets/javascripts/bundle.6ced434e.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "search.config.lang": "ru", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "\u041f\u043e\u0438\u0441\u043a", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e # \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
       
       <script>
         app = initialize({
           base: "..",
           features: [],
           search: Object.assign({
-            worker: "../assets/javascripts/worker/search.4ac00218.min.js"
+            worker: "../assets/javascripts/worker/search.8c7e0a7e.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>
