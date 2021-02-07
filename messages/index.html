@@ -13,7 +13,7 @@
         <meta name="author" content="MasterGroosha">
       
       
-        <link rel="canonical" href="https://mastergroosha.github.io/telegram-tutorial-2/02_messages/">
+        <link rel="canonical" href="https://mastergroosha.github.io/telegram-tutorial-2/messages/">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.3">
@@ -215,7 +215,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../01_quickstart/" class="md-nav__link">
+    <a href="../quickstart/" class="md-nav__link">
       Знакомство с aiogram
     </a>
   </li>
@@ -293,8 +293,21 @@
 
 
   <li class="md-nav__item">
-    <a href="../03_buttons/" class="md-nav__link">
+    <a href="../buttons/" class="md-nav__link">
       Кнопки
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  <li class="md-nav__item">
+    <a href="../fsm/" class="md-nav__link">
+      Конечные автоматы
     </a>
   </li>
 
@@ -364,34 +377,32 @@
 практически что угодно и при этом подавать информацию хочется <em>красиво</em>. В распоряжении у разработчика имеется три способа 
 разметки текста: HTML, Markdown и MarkdownV2. Наиболее продвинутыми из них считаются HTML и MarkdownV2, «классический» 
 маркдаун оставлен для обеспечения обратной совместимости и поддерживает меньше возможностей.</p>
-<p>За выбор форматирования при отправке сообщений отвечает аргумент <code>parse_mode</code>, например:</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">aiogram</span> <span class="kn">import</span> <span class="n">types</span>
+<p>За выбор форматирования при отправке сообщений отвечает аргумент <code>parse_mode</code>, например:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aiogram</span> <span class="kn">import</span> <span class="n">types</span>
 
 <span class="c1"># где-то в функции...</span>
 <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="s2">&quot;Hello, &lt;b&gt;world&lt;/b&gt;!&quot;</span><span class="p">,</span> <span class="n">parse_mode</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">ParseMode</span><span class="o">.</span><span class="n">HTML</span><span class="p">)</span>
 <span class="c1"># Вместо Enum-а можно задать parse_mode в виде обычной строки:</span>
 <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="s2">&quot;Hello, *world*\!&quot;</span><span class="p">,</span> <span class="n">parse_mode</span><span class="o">=</span><span class="s2">&quot;MarkdownV2&quot;</span><span class="p">)</span>
-</code></pre></div>
-
-<p><img alt="Hello world с разным форматированием" src="../images/l02_1.png" /></p>
+</code></pre></div></p>
+<p><img alt="Hello world с разным форматированием" src="../images/messages/l02_1.png" /></p>
 <p>Если в боте повсеместно используется определённое форматирование, то каждый раз указывать аргумент <code>parse_mode</code> довольно 
 накладно. К счастью, в aiogram можно передать необходимый тип прямо в объект <strong>Bot</strong>, а если в каком-то конкретном случае 
 нужно обойтись без этих ваших разметок, то просто укажите <code>parse_mode=""</code> (пустая строка):</p>
-<div class="codehilite"><pre><span></span><code><span class="n">bot</span> <span class="o">=</span> <span class="n">Bot</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="s2">&quot;123:abcxyz&quot;</span><span class="p">,</span> <span class="n">parse_mode</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">ParseMode</span><span class="o">.</span><span class="n">HTML</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">bot</span> <span class="o">=</span> <span class="n">Bot</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="s2">&quot;123:abcxyz&quot;</span><span class="p">,</span> <span class="n">parse_mode</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">ParseMode</span><span class="o">.</span><span class="n">HTML</span><span class="p">)</span>
 
 <span class="c1"># где-то в функции...</span>
 <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="s2">&quot;Сообщение с &lt;u&gt;HTML-разметкой&lt;/u&gt;&quot;</span><span class="p">)</span>
 <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="s2">&quot;Сообщение без &lt;s&gt;какой-либо разметки&lt;/s&gt;&quot;</span><span class="p">,</span> <span class="n">parse_mode</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 </code></pre></div>
-
-<p><img alt="Настройка типа разметки по умолчанию" src="../images/l02_2.png" /></p>
+<p><img alt="Настройка типа разметки по умолчанию" src="../images/messages/l02_2.png" /></p>
 <p>Существует и более «программный» или даже «динамический» способ формирования сообщения.
 Для этого нужно импортировать модуль markdown из aiogram.utils, который, несмотря на название, поддерживает и HTML тоже.
 Далее вызовите функцию <code>text()</code>, в которую передайте произвольное число таких же вызовов функции <code>text()</code>.
 Тип форматирования определяется названием функции, а буква "h" в начале означает HTML, т.е. функция <code>hbold()</code> обрамляет 
 переданный ей текст как жирный в HTML-разметке (<code>&lt;b&gt;текст&lt;/b&gt;</code>). Аргумент <code>sep</code> определяет разделитель между кусками текста.<br />
-В общем, смотрите на код и скриншот ниже. Стоит ли использовать такой способ создания текста — решать вам:</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">aiogram.utils.markdown</span> <span class="k">as</span> <span class="nn">fmt</span>
+В общем, смотрите на код и скриншот ниже. Стоит ли использовать такой способ создания текста — решать вам:
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">aiogram.utils.markdown</span> <span class="k">as</span> <span class="nn">fmt</span>
 
 <span class="c1"># где-то в функции...</span>
 <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span>
@@ -403,12 +414,11 @@
         <span class="p">),</span> <span class="n">parse_mode</span><span class="o">=</span><span class="s2">&quot;HTML&quot;</span>
     <span class="p">)</span>
 </code></pre></div>
-
-<p><img alt="Динамическое форматирование" src="../images/l02_3.png" /></p>
+<img alt="Динамическое форматирование" src="../images/messages/l02_3.png" /></p>
 <p>Помимо отправки с форматированием, Aiogram позволяет извлекать входящий текст как простое содержимое (plain text), 
 как HTML и как Markdown. Сравнить можно на скриншоте ниже. 
-Это удобно использовать, например, если вы хотите вернуть отправителю его сообщение с небольшими изменениями:</p>
-<div class="codehilite"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">()</span>
+Это удобно использовать, например, если вы хотите вернуть отправителю его сообщение с небольшими изменениями:
+<div class="highlight"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">()</span>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">any_text_message</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span>
     <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
     <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">md_text</span><span class="p">)</span>
@@ -417,20 +427,18 @@
     <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span>
         <span class="sa">f</span><span class="s2">&quot;&lt;u&gt;Ваш текст&lt;/u&gt;:</span><span class="se">\n\n</span><span class="si">{</span><span class="n">message</span><span class="o">.</span><span class="n">html_text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">parse_mode</span><span class="o">=</span><span class="s2">&quot;HTML&quot;</span>
     <span class="p">)</span>
-</code></pre></div>
-
-<p><img alt="Настройка типа разметки по умолчанию" src="../images/l02_4.png" /></p>
+</code></pre></div></p>
+<p><img alt="Настройка типа разметки по умолчанию" src="../images/messages/l02_4.png" /></p>
 <p>Всё бы ничего, но с использованием форматирования есть проблема: не в меру хитрые пользователи могут использовать спец. 
 символы в именах или сообщениях, ломая бота. Впрочем, в aiogram существуют методы экранирования таких символов: 
-<code>escape_md()</code> и <code>quote_html()</code>. Либо можно использовать упомянутые выше методы (h)bold, (h)italic и прочие:</p>
-<div class="codehilite"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">()</span>
+<code>escape_md()</code> и <code>quote_html()</code>. Либо можно использовать упомянутые выше методы (h)bold, (h)italic и прочие:
+<div class="highlight"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">()</span>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">any_text_message2</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span>
     <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Привет, &lt;b&gt;</span><span class="si">{</span><span class="n">fmt</span><span class="o">.</span><span class="n">quote_html</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">text</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;/b&gt;&quot;</span><span class="p">,</span> <span class="n">parse_mode</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">ParseMode</span><span class="o">.</span><span class="n">HTML</span><span class="p">)</span>
     <span class="c1"># А можно и так:</span>
     <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="n">fmt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;Привет,&quot;</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">hbold</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">text</span><span class="p">)),</span> <span class="n">parse_mode</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">ParseMode</span><span class="o">.</span><span class="n">HTML</span><span class="p">)</span>
 </code></pre></div>
-
-<p><img alt="Экранирование ввода" src="../images/l02_5.png" /></p>
+<img alt="Экранирование ввода" src="../images/messages/l02_5.png" /></p>
 <div class="admonition info">
 <p>Подробнее о различных способах форматирования и поддерживаемых тегах можно узнать 
 <a href="https://core.telegram.org/bots/api#formatting-options">в документации Bot API</a>.</p>
@@ -441,18 +449,17 @@
 для повторной отправки одного и того же медиафайла много раз, причём отправка будет мгновенной, т.к. сам файл уже лежит 
 на серверах Telegram. Это самый предпочтительный способ.<br />
 К примеру, следующий код заставит бота моментально ответить пользователю той же гифкой, что была прислана: </p>
-<div class="codehilite"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">content_types</span><span class="o">=</span><span class="p">[</span><span class="n">types</span><span class="o">.</span><span class="n">ContentType</span><span class="o">.</span><span class="n">ANIMATION</span><span class="p">])</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">content_types</span><span class="o">=</span><span class="p">[</span><span class="n">types</span><span class="o">.</span><span class="n">ContentType</span><span class="o">.</span><span class="n">ANIMATION</span><span class="p">])</span>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">echo_document</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span>
     <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">reply_animation</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">file_id</span><span class="p">)</span>
 </code></pre></div>
-
 <p><code>file_id</code> уникален для каждого бота, т.е. переиспользовать чужой идентификатор нельзя. Однако в Bot API есть ещё 
 <code>file_unique_id</code>. Его нельзя использовать для повторной отправки или скачивания медиафайла, но зато он одинаковый у всех 
 ботов. Нужен <code>file_unique_id</code> обычно тогда, когда нескольким ботам требуется знать, что их собственные <code>file_id</code> односятся 
 к одному и тому же файлу.</p>
 <p>Кстати, про скачивание: aiogram предлагает удобный вспомогательный метод <code>download()</code> для загрузки небольших файлов на сервер, 
-где запущен бот: </p>
-<div class="codehilite"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">content_types</span><span class="o">=</span><span class="p">[</span><span class="n">types</span><span class="o">.</span><span class="n">ContentType</span><span class="o">.</span><span class="n">DOCUMENT</span><span class="p">])</span>
+где запущен бот: 
+<div class="highlight"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">content_types</span><span class="o">=</span><span class="p">[</span><span class="n">types</span><span class="o">.</span><span class="n">ContentType</span><span class="o">.</span><span class="n">DOCUMENT</span><span class="p">])</span>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">download_doc</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span>
     <span class="c1"># Скачивание в каталог с ботом с созданием подкаталогов по типу файла</span>
     <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">download</span><span class="p">()</span>
@@ -463,8 +470,7 @@
 <span class="k">async</span> <span class="k">def</span> <span class="nf">download_photo</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span>
     <span class="c1"># Убедитесь, что каталог /tmp/somedir существует!</span>
     <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">photo</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">destination</span><span class="o">=</span><span class="s2">&quot;/tmp/somedir/&quot;</span><span class="p">)</span>
-</code></pre></div>
-
+</code></pre></div></p>
 <div class="admonition info">
 <p class="admonition-title">Работа с изображениями</p>
 <p>Обратите внимание на конструкцию <code>message.photo[-1]</code>. Когда пользователь присылает боту изображение, Telegram присылает 
@@ -491,8 +497,8 @@ Telegram Client API, а не с Telegram Bot API, например, <a href="htt
 можно поместить ссылку в <a href="http://www.fileformat.info/info/unicode/char/200b/index.htm">пробел нулевой ширины</a> и вставить 
 всю эту конструкцию в начало сообщения. Для наблюдателя в сообщении никаких ссылок нет, а сервер Telegram всё видит и честно 
 добавляет предпросмотр.<br />
-Разработчики aiogram для этого даже сделали специальный вспомогательный метод <code>hide_link()</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">aiogram.utils.markdown</span> <span class="k">as</span> <span class="nn">fmt</span>
+Разработчики aiogram для этого даже сделали специальный вспомогательный метод <code>hide_link()</code>:
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">aiogram.utils.markdown</span> <span class="k">as</span> <span class="nn">fmt</span>
 
 <span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="s2">&quot;test4&quot;</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">with_hidden_link</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span>
@@ -504,9 +510,8 @@ Telegram Client API, а не с Telegram Bot API, например, <a href="htt
         <span class="sa">f</span><span class="s2">&quot;коронавируса, команда Павла Дурова не растерялась и сделала качественные &quot;</span>
         <span class="sa">f</span><span class="s2">&quot;видеозвонки на WebRTC!</span><span class="se">\n\n</span><span class="s2">P.S. а ещё ходят слухи про демонстрацию своего экрана :)&quot;</span><span class="p">,</span>
         <span class="n">parse_mode</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">ParseMode</span><span class="o">.</span><span class="n">HTML</span><span class="p">)</span>
-</code></pre></div>
-
-<p><img alt="Изображение со скрытой ссылкой" src="../images/l02_6.png" /></p>
+</code></pre></div></p>
+<p><img alt="Изображение со скрытой ссылкой" src="../images/messages/l02_6.png" /></p>
 <p>На этом всё. До следующих глав!<br />
 <s><small>Ставьте лайки, подписывайтесь, прожимайте колокольчик</small></s></p>
                 
@@ -529,7 +534,7 @@ Telegram Client API, а не с Telegram Bot API, например, <a href="htt
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../01_quickstart/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../quickstart/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -544,7 +549,7 @@ Telegram Client API, а не с Telegram Bot API, например, <a href="htt
           </a>
         
         
-          <a href="../03_buttons/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../buttons/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">

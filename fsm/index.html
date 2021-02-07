@@ -1,0 +1,769 @@
+
+<!doctype html>
+<html lang="ru" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Конечные автоматы (FSM)">
+      
+      
+      
+        <meta name="author" content="MasterGroosha">
+      
+      
+        <link rel="canonical" href="https://mastergroosha.github.io/telegram-tutorial-2/fsm/">
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.3">
+    
+    
+      
+        <title>Конечные автоматы (FSM) - Пишем Telegram-ботов на Python (v2)</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.3b61ea93.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.39b8e14a.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#009485">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="preference" data-md-color-primary="teal" data-md-color-accent="teal">
+      
+        <script>matchMedia("(prefers-color-scheme: dark)").matches&&document.body.setAttribute("data-md-color-scheme","slate")</script>
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#fsm" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="https://mastergroosha.github.io/telegram-tutorial-2" title="Пишем Telegram-ботов на Python (v2)" class="md-header-nav__button md-logo" aria-label="Пишем Telegram-ботов на Python (v2)">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a2 2 0 012 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 017 7h1a1 1 0 011 1v3a1 1 0 01-1 1h-1v1a2 2 0 01-2 2H5a2 2 0 01-2-2v-1H2a1 1 0 01-1-1v-3a1 1 0 011-1h1a7 7 0 017-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 012-2M7.5 13A2.5 2.5 0 005 15.5 2.5 2.5 0 007.5 18a2.5 2.5 0 002.5-2.5A2.5 2.5 0 007.5 13m9 0a2.5 2.5 0 00-2.5 2.5 2.5 2.5 0 002.5 2.5 2.5 2.5 0 002.5-2.5 2.5 2.5 0 00-2.5-2.5z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      <div class="md-header-nav__ellipsis">
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            Пишем Telegram-ботов на Python (v2)
+          </span>
+        </div>
+        <div class="md-header-nav__topic">
+          <span class="md-ellipsis">
+            
+              Конечные автоматы (FSM)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Поиск" placeholder="Поиск" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/MasterGroosha/telegram-tutorial-2" title="Перейти к репозиторию" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    MasterGroosha/telegram-tutorial-2
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://mastergroosha.github.io/telegram-tutorial-2" title="Пишем Telegram-ботов на Python (v2)" class="md-nav__button md-logo" aria-label="Пишем Telegram-ботов на Python (v2)">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a2 2 0 012 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 017 7h1a1 1 0 011 1v3a1 1 0 01-1 1h-1v1a2 2 0 01-2 2H5a2 2 0 01-2-2v-1H2a1 1 0 01-1-1v-3a1 1 0 011-1h1a7 7 0 017-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 012-2M7.5 13A2.5 2.5 0 005 15.5 2.5 2.5 0 007.5 18a2.5 2.5 0 002.5-2.5A2.5 2.5 0 007.5 13m9 0a2.5 2.5 0 00-2.5 2.5 2.5 2.5 0 002.5 2.5 2.5 2.5 0 002.5-2.5 2.5 2.5 0 00-2.5-2.5z"/></svg>
+
+    </a>
+    Оглавление
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/MasterGroosha/telegram-tutorial-2" title="Перейти к репозиторию" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    MasterGroosha/telegram-tutorial-2
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+
+  <li class="md-nav__item">
+    <a href=".." class="md-nav__link">
+      Введение
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  <li class="md-nav__item">
+    <a href="../quickstart/" class="md-nav__link">
+      Знакомство с aiogram
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  <li class="md-nav__item">
+    <a href="../messages/" class="md-nav__link">
+      Работа с собщениями
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+
+  <li class="md-nav__item">
+    <a href="../buttons/" class="md-nav__link">
+      Кнопки
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Конечные автоматы
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
+      Конечные автоматы
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    Теория
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    Практика
+  </a>
+  
+    <nav class="md-nav" aria-label="Практика">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    Структура файлов и каталогов
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    Создание шагов
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    Общие команды
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    Точка входа
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    Теория
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    Практика
+  </a>
+  
+    <nav class="md-nav" aria-label="Практика">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    Структура файлов и каталогов
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    Создание шагов
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    Общие команды
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    Точка входа
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="fsm">Конечные автоматы (FSM)<a class="headerlink" href="#fsm" title="Permanent link">&para;</a></h1>
+<h2 id="_1">Теория<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>В этой главе мы поговорим о, пожалуй, самой важной возможности ботов: о <strong>системе диалогов</strong>. К сожалению, далеко не все 
+действия в боте можно выполнить за одно сообщение или команду. Предположим, есть бот для знакомств, где при регистрации нужно 
+указать имя, возраст и отправить фотографию с лицом. Можно, конечно, попросить пользователя отправить фотографию, а в подписи 
+к ней указать все данные, но это неудобно для обработки и запроса повторного ввода.<br />
+Теперь представим пошаговый ввод данных, где в начале бот «включает» режим ожидания определённой информации от конкретного 
+юзера, далее на каждом этапе проверяет вводимые данные, а по команде <code>/cancel</code> прекращает ожидать очередной шаг и 
+возвращается в основной режим. Взгляните на схему ниже:</p>
+<p><img alt="Процесс, состоящий из трёх этапов" src="../images/fsm/l04_1.svg" /></p>
+<p><strong>Зелёной</strong> стрелкой обозначен процесс перехода по шагам без ошибок, <strong>синие</strong> стрелки означают сохранение текущего состояния и 
+ожидание повторного ввода (например, если юзер указал, что ему 250 лет, следует запросить возраст заново), а <strong>красные</strong> 
+показывают выход из всего процесса из-за команды <code>/cancel</code> или любой другой, означающей отмену.</p>
+<p>Процесс со схемы выше в теории алгоритмов называется <strong>конечным автоматом</strong> (или FSM — Finite State Machine). Подробнее об этом можно 
+прочесть <a href="https://tproger.ru/translations/finite-state-machines-theory-and-implementation/">здесь</a>.</p>
+<h2 id="_2">Практика<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>В aiogram механизм конечных автоматов реализован гораздо лучше, чем в том же 
+<a href="https://mastergroosha.github.io/telegram-tutorial/docs/lesson_11/">pyTelegramBotAPI</a>. Во фреймворк уже встроена поддержка 
+различных бэкендов для хранения состояний между перезапусками бота (впрочем, никто не мешает написать свой), а помимо, 
+собственно, состояний можно хранить произвольные данные, например, вышеописанные имя и возраст для последующего использования 
+где-либо. Список имеющихся хранилищ FSM можно найти 
+<a href="https://github.com/aiogram/aiogram/tree/dev-2.x/aiogram/contrib/fsm_storage">в репозитории aiogram</a>, а в этой главе мы 
+будем пользоваться самым простейшим бэкендом 
+<a href="https://github.com/aiogram/aiogram/blob/dev-2.x/aiogram/contrib/fsm_storage/memory.py">MemoryStorage</a>, который 
+хранит все данные в оперативной памяти. Он идеально подходит для примеров, но <strong>не рекомендуется</strong> использовать его в реальных 
+проектах, т.к. MemoryStorage хранит все данные в оперативной памяти без сброса на диск.</p>
+<p>В качестве примера мы напишем имитатор заказа еды и напитков в кафе, а заодно научимся хранить логически разные хэндлеры 
+в разных файлах. </p>
+<div class="admonition warning">
+<p class="admonition-title">Примечание об исходных текстах к главе</p>
+<p>В тексте будет рассмотрен не весь код бота, некоторые импорты и обработчики специально 
+пропущены для улучшения читабельности. Полный набор исходников можно найти <a href="https://gitlab.com/groosha/telegram-tutorial-2">на GitLab</a> 
+или в зеркале <a href="https://github.com/MasterGroosha/telegram-tutorial-2">на GitHub</a>.</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Благодарность</p>
+<p>За основу структуры файлов и каталогов взят репозиторий <a href="https://github.com/Tishka17/tgbot_template">tgbot_template</a> 
+от пользователя <strong>Tishka17</strong>. В этой главе будет рассмотрен сильно упрощённый вариант его примера, а далее по мере 
+усложнения бота структура файлов будет расширяться.<br />
+Спасибо!</p>
+</div>
+<h3 id="_3">Структура файлов и каталогов<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>Точкой входа будет являться файл <code>bot.py</code>, рядом с ним каталог "config" с файлом конфигурации <code>bot.ini</code>. В прошлых главах была всего 
+одна переменная, которую передавали через environment variables, но когда настроек становится много, хорошей идеей становится 
+использование отдельного файла конфигурации и его парсинг стандартным питоновским 
+<a href="https://docs.python.org/3/library/configparser.html">Configparser</a>-ом. Здесь же будет расположен пакет <code>app</code>, внутри которого 
+расположен файл <code>config.py</code>, отвечающий за разбор файла конфигурации, а также пакет <code>handlers</code> с различными хэндлерами для 
+логически разных наборов шагов. Схематично всё вышеперечисленное выглядит как-то так:</p>
+<div class="highlight"><pre><span></span><code>├── app/
+│ ├── config.py
+│ ├── handlers/
+│ │ ├── common.py
+│ │ ├── drinks.py
+│ │ ├── food.py
+│ │ └── __init__.py
+│ └── __init__.py
+├── config/
+│ └── bot.ini
+├── bot.py
+└── requirements.txt
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">О модулях, пакетах и каталогах</p>
+<p>Модули в Python — это файлы с расширением <code>*.py</code>. Для структурирования файлов их можно объединять в каталоги. Если в 
+таком каталоге создать файл <code>__init__.py</code>, то каталог превращается в пакет. Подробнее обо всём этом (с примерами) 
+можно прочесть на сайте <a href="https://devpractice.ru/python-lesson-13-modules-and-packages/">devpractice.ru</a>.</p>
+</div>
+<h3 id="_4">Создание шагов<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>Рассмотрим описание шагов для «заказа» еды. Для начала в файле <code>app/handlers/food.py</code> импортируем необходимые объекты и 
+приведём списки блюд и их размеров (в реальной жизни эта информация может динамически подгружаться из какой-либо БД):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aiogram</span> <span class="kn">import</span> <span class="n">Dispatcher</span><span class="p">,</span> <span class="n">types</span>
+<span class="kn">from</span> <span class="nn">aiogram.dispatcher</span> <span class="kn">import</span> <span class="n">FSMContext</span>
+<span class="kn">from</span> <span class="nn">aiogram.dispatcher.filters.state</span> <span class="kn">import</span> <span class="n">State</span><span class="p">,</span> <span class="n">StatesGroup</span>
+
+<span class="c1"># Эти значения далее будут подставляться в итоговый текст, отсюда </span>
+<span class="c1"># такая на первый взгляд странная форма прилагательных</span>
+<span class="n">available_food_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;суши&quot;</span><span class="p">,</span> <span class="s2">&quot;спагетти&quot;</span><span class="p">,</span> <span class="s2">&quot;хачапури&quot;</span><span class="p">]</span>
+<span class="n">available_food_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;маленькую&quot;</span><span class="p">,</span> <span class="s2">&quot;среднюю&quot;</span><span class="p">,</span> <span class="s2">&quot;большую&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p>Теперь опишем все возможные «состояния» конкретного процесса (выбор еды). На словах можно описать так: пользователь вызывает 
+команду <code>/food</code>, бот отвечает сообщением с просьбой выбрать блюдо и встаёт в состояние *ожидает выбор блюда* для конкретного 
+пользователя. Как только юзер делает выбор, бот, находясь в этом состоянии, проверяет корректность ввода, а затем принимает решение, 
+запросить ввод повторно (без смены состояния) или перейти к следующему шагу *ожидает выбор размера порции*. Когда пользователь 
+и здесь вводит корректные данные, бот отображает итоговый результат (содержимое заказа) и сбрасывает состояние. Позднее 
+в этой главе мы научимся делать принудительный сброс состояния на любом этапе командой <code>/cancel</code>.</p>
+<p>Итак, перейдём непосредственно к описанию состояний. Желательно их указывать именно в том порядке, в котором предполагается 
+переход пользователя, это позволит немного упростить код. Для хранения состояний необходимо создать класс, наследующийся 
+от класса <code>StatesGroup</code>, внутри него нужно создать переменные, присвоив им экземпляры класса <code>State</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">OrderFood</span><span class="p">(</span><span class="n">StatesGroup</span><span class="p">):</span>
+    <span class="n">waiting_for_food_name</span> <span class="o">=</span> <span class="n">State</span><span class="p">()</span>
+    <span class="n">waiting_for_food_size</span> <span class="o">=</span> <span class="n">State</span><span class="p">()</span>
+</code></pre></div>
+<p>Напишем обработчик первого шага, реагирующий на команду <code>/food</code> (регистрировать его будем позднее):</p>
+<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">food_start</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span>
+    <span class="n">keyboard</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">ReplyKeyboardMarkup</span><span class="p">(</span><span class="n">resize_keyboard</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">available_food_names</span><span class="p">:</span>
+        <span class="n">keyboard</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="s2">&quot;Выберите блюдо:&quot;</span><span class="p">,</span> <span class="n">reply_markup</span><span class="o">=</span><span class="n">keyboard</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">OrderFood</span><span class="o">.</span><span class="n">waiting_for_food_name</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+</code></pre></div>
+<p>В последней строке мы явно говорим боту встать в состояние <code>waiting_for_food_name</code> из группы <code>OrderFood</code>. Следующая функция 
+будет вызываться только из указанного состояния, сохранять полученный от пользователя текст (если он валидный) и переходить 
+к следующему шагу:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="c1"># Обратите внимание: есть второй аргумент</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">food_chosen</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">FSMContext</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">message</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">available_food_names</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="s2">&quot;Пожалуйста, выберите блюдо, используя клавиатуру ниже.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">await</span> <span class="n">state</span><span class="o">.</span><span class="n">update_data</span><span class="p">(</span><span class="n">chosen_food</span><span class="o">=</span><span class="n">message</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+
+    <span class="n">keyboard</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">ReplyKeyboardMarkup</span><span class="p">(</span><span class="n">resize_keyboard</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">available_food_sizes</span><span class="p">:</span>
+        <span class="n">keyboard</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+    <span class="c1"># Для простых шагов можно не указывать название состояния, обходясь next()</span>
+    <span class="k">await</span> <span class="n">OrderFood</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+    <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="s2">&quot;Теперь выберите размер порции:&quot;</span><span class="p">,</span> <span class="n">reply_markup</span><span class="o">=</span><span class="n">keyboard</span><span class="p">)</span>
+</code></pre></div>
+</td></tr></table>
+<p>Разберём некоторые строки из блока выше отдельно. В определении функции <code>food_chosen</code> (строка 2) появился второй аргумент 
+<code>state</code> типа <code>FSMContext</code>. Через него можно получить данные от FSM-бэкенда. В предыдущей функции <code>food_start()</code> никакие 
+такие данные не требовались, поэтому аргумент был пропущен. В строке 3 производится проверка текста от пользователя. Если 
+он ввёл произвольный текст, а не использовал кнопки, то необходимо сообщить об ошибке и досрочно завершить выполнение 
+функции. При этом состояние пользователя останется тем же и бот снова будет ожидать выбор блюда.<br />
+К моменту перехода к строке 6 мы уже уверены, что пользователь указал корректное название блюда, поэтому можно спокойно 
+сохранить полученный текст в хранилище данных FSM. Концептуально это словарь, поэтому воспользуемся функцией 
+<code>update_data()</code> и сохраним текст сообщения под ключом <code>chosen_food</code> и со значением <code>message.text.lower()</code>.<br />
+В строке 12 мы готовый продвинуть пользователя на следующий шаг, поэтому просто вызываем метод <code>next()</code> у класса <code>OrderFood</code>. 
+Именно для использования <code>next()</code> ранее предлагалось объявлять шаги в нужном порядке. В противном случае пришлось бы 
+указывать целиком <code>await OrderFood.waiting_for_food_size.set()</code>.</p>
+<p>Осталось реализовать последнюю функцию, которая отвечает за получение размера порции (с аналогичной проверкой ввода) и 
+вывод результатов пользователю:</p>
+<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">food_size_chosen</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">FSMContext</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">message</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">available_food_sizes</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="s2">&quot;Пожалуйста, выберите размер порции, используя клавиатуру ниже.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="n">user_data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">state</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+    <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Вы заказали </span><span class="si">{</span><span class="n">message</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2"> порцию </span><span class="si">{</span><span class="n">user_data</span><span class="p">[</span><span class="s1">&#39;chosen_food&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                         <span class="sa">f</span><span class="s2">&quot;Попробуйте теперь заказать напитки: /drinks&quot;</span><span class="p">,</span> <span class="n">reply_markup</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">ReplyKeyboardRemove</span><span class="p">())</span>
+    <span class="k">await</span> <span class="n">state</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+</code></pre></div>
+<p>На что стоит обратить внимание: во-первых, получить хранимые данные из FSM можно методом <code>get_data()</code> у <code>state</code>. Во-вторых, 
+т.к. это словарь, то и извлечение содержимого аналогично (<code>user_data['chosen_food']</code>, не забудьте, что в общем случае 
+какого-то ключа может не быть, что приведёт к <code>KeyError</code>, пользуйтесь методом <code>get()</code>). В-третьих, вызов метода <code>finish()</code> 
+сбрасывает не только состояние, но и хранящиеся данные. Если надо сбросить <strong>только</strong> состояние, воспользуйтесь 
+<code>await state.reset_state(with_data=False)</code></p>
+<p>Наконец, напишем обычную функцию для регистрации вышестоящих обработчиков, на вход она будет принимать диспетчер. Значение 
+состояния "*" при регистрации <code>food_start()</code> означает срабатывание при любом состоянии. Грубо говоря, если пользователь находится 
+на шаге *выбор размера порции*, но решает начать заново и вводит <code>/food</code>, бот вызовет <code>food_start()</code> и начнёт весь процесс 
+заново.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">register_handlers_food</span><span class="p">(</span><span class="n">dp</span><span class="p">:</span> <span class="n">Dispatcher</span><span class="p">):</span>
+    <span class="n">dp</span><span class="o">.</span><span class="n">register_message_handler</span><span class="p">(</span><span class="n">food_start</span><span class="p">,</span> <span class="n">commands</span><span class="o">=</span><span class="s2">&quot;food&quot;</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
+    <span class="n">dp</span><span class="o">.</span><span class="n">register_message_handler</span><span class="p">(</span><span class="n">food_chosen</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="n">OrderFood</span><span class="o">.</span><span class="n">waiting_for_food_name</span><span class="p">)</span>
+    <span class="n">dp</span><span class="o">.</span><span class="n">register_message_handler</span><span class="p">(</span><span class="n">food_size_chosen</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="n">OrderFood</span><span class="o">.</span><span class="n">waiting_for_food_size</span><span class="p">)</span>
+</code></pre></div>
+<p>Шаги для выбора напитков делаются совершенно аналогично. Попробуйте сделать самостоятельно или загляните в исходные тексты 
+к этой главе.</p>
+<h3 id="_5">Общие команды<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>Раз уж заговорили о сбросе состояний, давайте в файле <code>app/handlers/common.py</code> реализуем обработчики команды <code>/start</code> и 
+действия «отмены». Первая должна показывать некий приветственный/справочный текст, а вторая просто пишет "действие отменено". 
+Обе функции сбрасывают состояние и данные и убирают обычную клавиатуру, если вдруг она есть:</p>
+<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">cmd_start</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">FSMContext</span><span class="p">):</span>
+    <span class="k">await</span> <span class="n">state</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+    <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span>
+        <span class="s2">&quot;Выберите, что хотите заказать: напитки (/drinks) или блюда (/food).&quot;</span><span class="p">,</span>
+        <span class="n">reply_markup</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">ReplyKeyboardRemove</span><span class="p">()</span>
+    <span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">cmd_cancel</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">FSMContext</span><span class="p">):</span>
+    <span class="k">await</span> <span class="n">state</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+    <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="s2">&quot;Действие отменено&quot;</span><span class="p">,</span> <span class="n">reply_markup</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">ReplyKeyboardRemove</span><span class="p">())</span>
+</code></pre></div>
+<p>Зарегистрируем эти два обработчика:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">register_handlers_common</span><span class="p">(</span><span class="n">dp</span><span class="p">:</span> <span class="n">Dispatcher</span><span class="p">):</span>
+    <span class="n">dp</span><span class="o">.</span><span class="n">register_message_handler</span><span class="p">(</span><span class="n">cmd_start</span><span class="p">,</span> <span class="n">commands</span><span class="o">=</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
+    <span class="n">dp</span><span class="o">.</span><span class="n">register_message_handler</span><span class="p">(</span><span class="n">cmd_cancel</span><span class="p">,</span> <span class="n">commands</span><span class="o">=</span><span class="s2">&quot;cancel&quot;</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
+    <span class="n">dp</span><span class="o">.</span><span class="n">register_message_handler</span><span class="p">(</span><span class="n">cmd_cancel</span><span class="p">,</span> <span class="n">Text</span><span class="p">(</span><span class="n">equals</span><span class="o">=</span><span class="s2">&quot;отмена&quot;</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">state</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Почему строк три, а не две? Дело в том, что один и тот же обработчик можно вызвать по разным событиям. Вот мы и 
+зарегистрируем функцию <code>cmd_cancel()</code> для вызова как по команде <code>/cancel</code>, так и по отправке сообщения "Отмена" (в любом регистре). 
+К слову, если вы навешиваете декораторы напрямую на функцию, то выглядеть это будет следующим образом:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="s2">&quot;cancel&quot;</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
+<span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">Text</span><span class="p">(</span><span class="n">equals</span><span class="o">=</span><span class="s2">&quot;отмена&quot;</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">state</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">cmd_cancel</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">FSMContext</span><span class="p">):</span>
+    <span class="o">...</span>
+</code></pre></div>
+<h3 id="_6">Точка входа<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p>Вернёмся к файлу <code>bot.py</code> и реализуем две функции: <code>set_commands()</code> и <code>main()</code>. В первой зафиксируем список команд, доступных 
+в интерфейсе Telegram при нажатии на кнопку <code>[ / ]</code>, а во второй проведём необходимые действия по запуску бота: настроим логирование, 
+загрузим и распарсим файл конфигурации, объявим объекты <code>Bot</code> и <code>Dispatcher</code>, зарегистрируем хэндлеры и команды и, наконец, 
+запустим бота в режиме поллинга:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Не забудьте про импорты</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># Регистрация команд, отображаемых в интерфейсе Telegram</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">set_commands</span><span class="p">(</span><span class="n">bot</span><span class="p">:</span> <span class="n">Bot</span><span class="p">):</span>
+    <span class="n">commands</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">BotCommand</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s2">&quot;/drinks&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Заказать напитки&quot;</span><span class="p">),</span>
+        <span class="n">BotCommand</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s2">&quot;/food&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Заказать блюда&quot;</span><span class="p">),</span>
+        <span class="n">BotCommand</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s2">&quot;/cancel&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Отменить текущее действие&quot;</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="k">await</span> <span class="n">bot</span><span class="o">.</span><span class="n">set_my_commands</span><span class="p">(</span><span class="n">commands</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># Настройка логирования в stdout</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+        <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
+        <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> - </span><span class="si">%(levelname)s</span><span class="s2"> - </span><span class="si">%(name)s</span><span class="s2"> - </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Starting bot&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Парсинг файла конфигурации</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="s2">&quot;config/bot.ini&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Объявление и инициализация объектов бота и диспетчера</span>
+    <span class="n">bot</span> <span class="o">=</span> <span class="n">Bot</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">tg_bot</span><span class="o">.</span><span class="n">token</span><span class="p">)</span>
+    <span class="n">dp</span> <span class="o">=</span> <span class="n">Dispatcher</span><span class="p">(</span><span class="n">bot</span><span class="p">,</span> <span class="n">storage</span><span class="o">=</span><span class="n">MemoryStorage</span><span class="p">())</span>
+
+    <span class="c1"># Регистрация хэндлеров</span>
+    <span class="n">register_handlers_common</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span>
+    <span class="n">register_handlers_drinks</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span>
+    <span class="n">register_handlers_food</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span>
+
+    <span class="c1"># Установка команд бота</span>
+    <span class="k">await</span> <span class="n">set_commands</span><span class="p">(</span><span class="n">bot</span><span class="p">)</span>
+
+    <span class="c1"># Запуск поллинга</span>
+    <span class="c1"># await dp.skip_updates()  # пропуск накопившихся апдейтов (необязательно)</span>
+    <span class="k">await</span> <span class="n">dp</span><span class="o">.</span><span class="n">start_polling</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<p>Теперь, вооружившись знаниями о конечных автоматах, вы можете безбоязненно писать ботов с системой диалогов.</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../buttons/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Назад
+                </span>
+                Кнопки
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2020-2021 Groosha
+          </div>
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+  <div class="md-footer-social">
+    
+      
+      
+      <a href="https://t.me/joinchat/TsftDfnevFLQS1ts" target="_blank" rel="noopener" title="Чат в Telegram" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm121.8 169.9l-40.7 191.8c-3 13.6-11.1 16.9-22.4 10.5l-62-45.7-29.9 28.8c-3.3 3.3-6.1 6.1-12.5 6.1l4.4-63.1 114.9-103.8c5-4.4-1.1-6.9-7.7-2.5l-142 89.4-61.2-19.1c-13.3-4.2-13.6-13.3 2.8-19.7l239.1-92.2c11.1-4 20.8 2.7 17.2 19.5z"/></svg>
+      </a>
+    
+      
+      
+      <a href="https://github.com/MasterGroosha/telegram-tutorial-2" target="_blank" rel="noopener" title="GitHub" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"/></svg>
+      </a>
+    
+      
+      
+      <a href="https://gitlab.com/groosha/telegram-tutorial-2" target="_blank" rel="noopener" title="Gitlab" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M105.2 24.9c-3.1-8.9-15.7-8.9-18.9 0L29.8 199.7h132c-.1 0-56.6-174.8-56.6-174.8zM.9 287.7c-2.6 8 .3 16.9 7.1 22l247.9 184-226.2-294zm160.8-88l94.3 294 94.3-294zm349.4 88l-28.8-88-226.3 294 247.9-184c6.9-5.1 9.7-14 7.2-22zM425.7 24.9c-3.1-8.9-15.7-8.9-18.9 0l-56.6 174.8h132z"/></svg>
+      </a>
+    
+  </div>
+
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/vendor.08c56446.min.js"></script>
+      <script src="../assets/javascripts/bundle.6ced434e.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "search.config.lang": "ru", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "\u041f\u043e\u0438\u0441\u043a", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e # \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      
+      <script>
+        app = initialize({
+          base: "..",
+          features: [],
+          search: Object.assign({
+            worker: "../assets/javascripts/worker/search.8c7e0a7e.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>

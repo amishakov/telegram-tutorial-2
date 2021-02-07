@@ -13,7 +13,7 @@
         <meta name="author" content="MasterGroosha">
       
       
-        <link rel="canonical" href="https://mastergroosha.github.io/telegram-tutorial-2/03_buttons/">
+        <link rel="canonical" href="https://mastergroosha.github.io/telegram-tutorial-2/buttons/">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.3">
@@ -215,7 +215,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../01_quickstart/" class="md-nav__link">
+    <a href="../quickstart/" class="md-nav__link">
       Знакомство с aiogram
     </a>
   </li>
@@ -228,7 +228,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../02_messages/" class="md-nav__link">
+    <a href="../messages/" class="md-nav__link">
       Работа с собщениями
     </a>
   </li>
@@ -332,6 +332,19 @@
   </li>
 
     
+      
+      
+      
+
+
+
+  <li class="md-nav__item">
+    <a href="../fsm/" class="md-nav__link">
+      Конечные автоматы
+    </a>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -427,14 +440,14 @@
 <p>В этой главе мы познакомимся с такой замечательной фичей Telegram-ботов, как кнопки. Прежде всего, чтобы избежать 
 путаницы, определимся с названиями. То, что цепляется к низу экрана вашего устройства, будем называть <strong>обычными</strong> 
 кнопками, а то, что цепляется непосредственно к сообщениям, назовём <strong>инлайн</strong>-кнопками. Ещё раз картинкой:  </p>
-<p><img alt="Два вида кнопок" src="../images/l03_1.png" /></p>
+<p><img alt="Два вида кнопок" src="../images/buttons/l03_1.png" /></p>
 <h2 id="_2">Обычные кнопки<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <h3 id="_3">Кнопки как шаблоны<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
 <p>Этот вид кнопок появился вместе с Bot API в далёком 2015 году и представляет собой не что иное, как шаблоны сообщений 
 (за исключением нескольких особых случаев, но о них позже). Принцип простой: что написано на кнопке, то и будет отправлено 
 в текущий чат. Соответственно, чтобы обработать нажатие такой кнопки, бот должен распознавать входящие текстовые сообщения. </p>
 <p>Напишем хэндлер, который будет при нажатии на команду <code>/start</code> отправлять сообщение с двумя кнопками:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># from aiogram import types</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># from aiogram import types</span>
 <span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="s2">&quot;start&quot;</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">cmd_start</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span>
     <span class="n">keyboard</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">ReplyKeyboardMarkup</span><span class="p">()</span>
@@ -444,11 +457,10 @@
     <span class="n">keyboard</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">button_2</span><span class="p">)</span>
     <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="s2">&quot;Как подавать котлеты?&quot;</span><span class="p">,</span> <span class="n">reply_markup</span><span class="o">=</span><span class="n">keyboard</span><span class="p">)</span>
 </code></pre></div>
-
 <p>Обратите внимание, что т.к. обычные кнопки суть шаблоны сообщений, то их можно создавать не только как объекты <code>KeyboardButton</code>, 
 но и как обычные строки.<br />
 Что ж, запустим бота и обалдеем от громадных кнопок:</p>
-<p><img alt="Очень большие обычные кнопки" src="../images/l03_2.png" /></p>
+<p><img alt="Очень большие обычные кнопки" src="../images/buttons/l03_2.png" /></p>
 <p>Как-то некрасиво. Во-первых, хочется сделать кнопки поменьше, а во-вторых, расположить их горизонтально.<br />
 Почему вообще они такие большие? Дело в том, что по умолчанию «кнопочная» клавиатура должна занимать на смартфонах столько 
 же места, сколько и обычная буквенная. Для уменьшения кнопок к объекту клавиатуры надо указать дополнительный 
@@ -456,24 +468,23 @@
 Но как заменить вертикальные кнопки на горизонтальные? С точки зрения Bot API, клавиатура — это <a href="https://core.telegram.org/bots/api#replykeyboardmarkup">массив массивов</a> 
 кнопок, а если говорить проще, массив строк. Метод <code>add()</code> при каждом вызове создаёт новую строку (ряд) и принимает 
 произвольное число аргументов по количеству желаемых кнопок в строке. Перепишем наш код, чтобы было красиво:</p>
-<div class="codehilite"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="s2">&quot;start&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="s2">&quot;start&quot;</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">cmd_start</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span>
     <span class="n">keyboard</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">ReplyKeyboardMarkup</span><span class="p">(</span><span class="n">resize_keyboard</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">buttons</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;С пюрешкой&quot;</span><span class="p">,</span> <span class="s2">&quot;Без пюрешки&quot;</span><span class="p">]</span>
     <span class="n">keyboard</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">buttons</span><span class="p">)</span>
     <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="s2">&quot;Как подавать котлеты?&quot;</span><span class="p">,</span> <span class="n">reply_markup</span><span class="o">=</span><span class="n">keyboard</span><span class="p">)</span>
 </code></pre></div>
-
 <div class="admonition info">
 <p>Обратите внимание на конструкцию <code>*buttons</code>. Здесь вам не C++ и звёздочка используется для <em>распаковки списка</em>. 
 Подробнее об операторах <code>*</code> и <code>**</code> можно прочитать 
 <a href="https://tproger.ru/translations/asterisks-in-python-what-they-are-and-how-to-use-them/">здесь</a>.</p>
 </div>
 <p>Смотрим — действительно красиво:</p>
-<p><img alt="Кнопки в один ряд" src="../images/l03_3.png" /></p>
+<p><img alt="Кнопки в один ряд" src="../images/buttons/l03_3.png" /></p>
 <p>Осталось научить бота реагировать на нажатие таких кнопок. Как уже было сказано выше, необходимо делать проверку 
 на полное совпадение текста. Сделаем это двумя способами: через специальный фильтр <code>Text</code> и обычной лямбдой:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># from aiogram.dispatcher.filters import Text</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># from aiogram.dispatcher.filters import Text</span>
 <span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">Text</span><span class="p">(</span><span class="n">equals</span><span class="o">=</span><span class="s2">&quot;С пюрешкой&quot;</span><span class="p">))</span>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">with_puree</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span>
     <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">reply</span><span class="p">(</span><span class="s2">&quot;Отличный выбор!&quot;</span><span class="p">)</span>
@@ -483,8 +494,7 @@
 <span class="k">async</span> <span class="k">def</span> <span class="nf">without_puree</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span>
     <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">reply</span><span class="p">(</span><span class="s2">&quot;Так невкусно!&quot;</span><span class="p">)</span>
 </code></pre></div>
-
-<p><img alt="Реакция на нажатие кнопок" src="../images/l03_4.png" /></p>
+<p><img alt="Реакция на нажатие кнопок" src="../images/buttons/l03_4.png" /></p>
 <p>Чтобы удалить кнопки, необходимо отправить новое сообщение со специальной «удаляющей» клавиатурой типа 
 <code>ReplyKeyboardRemove</code>. Например: <code>await message.reply("Отличный выбор!", reply_markup=types.ReplyKeyboardRemove())</code></p>
 <div class="admonition info">
@@ -500,8 +510,8 @@
 для отправки текущей геолокации, для отправки своего номера телефона и ярлык для создания опроса/викторины. Для первых двух 
 типов достаточно установить булевый флаг, а для опросов и викторин нужно передать специальный тип <code>KeyboardButtonPollType</code> 
 и, по желанию, указать тип создаваемого объекта.</p>
-<p>Впрочем, проще один раз увидеть код:</p>
-<div class="codehilite"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="s2">&quot;special_buttons&quot;</span><span class="p">)</span>
+<p>Впрочем, проще один раз увидеть код:
+<div class="highlight"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="s2">&quot;special_buttons&quot;</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">cmd_special_buttons</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span>
     <span class="n">keyboard</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">ReplyKeyboardMarkup</span><span class="p">(</span><span class="n">resize_keyboard</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">keyboard</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">KeyboardButton</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Запросить геолокацию&quot;</span><span class="p">,</span> <span class="n">request_location</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
@@ -509,8 +519,7 @@
     <span class="n">keyboard</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">KeyboardButton</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Создать викторину&quot;</span><span class="p">,</span>
                                       <span class="n">request_poll</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">KeyboardButtonPollType</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">PollType</span><span class="o">.</span><span class="n">QUIZ</span><span class="p">)))</span>
     <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="s2">&quot;Выберите действие:&quot;</span><span class="p">,</span> <span class="n">reply_markup</span><span class="o">=</span><span class="n">keyboard</span><span class="p">)</span>
-</code></pre></div>
-
+</code></pre></div></p>
 <h2 id="-">Инлайн-кнопки<a class="headerlink" href="#-" title="Permanent link">&para;</a></h2>
 <h3 id="url-">URL-кнопки и колбэки<a class="headerlink" href="#url-" title="Permanent link">&para;</a></h3>
 <p>В отличие от обычных кнопок, инлайновые цепляются не к низу экрана, а к сообщению, с которым были отправлены. 
@@ -522,7 +531,7 @@
 <a href="https://github.com/MasterGroosha/telegram-tutorial-2">GitHub</a>. Спасибо!</p>
 </div>
 <p>Самые простые инлайн-кнопки относятся к типу URL, т.е. «ссылка». Поддерживаются только протоколы HTTP(S) и tg://</p>
-<div class="codehilite"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="s2">&quot;inline_url&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="s2">&quot;inline_url&quot;</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">cmd_inline_url</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span>
     <span class="n">buttons</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">types</span><span class="o">.</span><span class="n">InlineKeyboardButton</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;GitHub&quot;</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://github.com&quot;</span><span class="p">),</span>
@@ -532,47 +541,43 @@
     <span class="n">keyboard</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">buttons</span><span class="p">)</span>
     <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="s2">&quot;Кнопки-ссылки&quot;</span><span class="p">,</span> <span class="n">reply_markup</span><span class="o">=</span><span class="n">keyboard</span><span class="p">)</span>
 </code></pre></div>
-
 <p>А если хотите обе кнопки в ряд, то уберите <code>row_width=1</code> (тогда будет использоваться значение по умолчанию 3).</p>
 <p>С URL-кнопками больше обсуждать, по сути, нечего, поэтому перейдём к гвоздю сегодняшней программы — Callback-кнопкам. 
 Это очень мощная штука, которую вы можете встретить практически везде. Кнопки-реакции у постов (лайки), меню у @BotFather 
 и т.д. Суть в чём: у колбэк-кнопок есть специальное значение (data), по которому ваше приложение опознаёт, что нажато и что надо сделать. 
 И выбор правильного data <strong>очень важен</strong>! Стоит также отметить, что, в отличие от обычных кнопок, нажатие на колбэк-кнопку 
 позволяет сделать практически что угодно, от заказа пиццы до перезагрузки сервера.</p>
-<p>Напишем хэндлер, который по команде <code>/random</code> будет отправлять сообщение с колбэк-кнопкой:</p>
-<div class="codehilite"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">)</span>
+<p>Напишем хэндлер, который по команде <code>/random</code> будет отправлять сообщение с колбэк-кнопкой:
+<div class="highlight"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">cmd_random</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span>
     <span class="n">keyboard</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">InlineKeyboardMarkup</span><span class="p">()</span>
     <span class="n">keyboard</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">InlineKeyboardButton</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Нажми меня&quot;</span><span class="p">,</span> <span class="n">callback_data</span><span class="o">=</span><span class="s2">&quot;random_value&quot;</span><span class="p">))</span>
     <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="s2">&quot;Нажмите на кнопку, чтобы бот отправил число от 1 до 10&quot;</span><span class="p">,</span> <span class="n">reply_markup</span><span class="o">=</span><span class="n">keyboard</span><span class="p">)</span>
-</code></pre></div>
-
+</code></pre></div></p>
 <p>Но как же обработать нажатие? Если раньше мы использовали <code>message_handler</code> для обработки входящих сообщений, то теперь 
 будем использовать <code>callback_query_handler</code> для обработки колбэков. Ориентироваться будем на «значение» кнопки, т.е. на 
 её data:</p>
-<div class="codehilite"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">callback_query_handler</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;random_value&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">callback_query_handler</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;random_value&quot;</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">send_random_value</span><span class="p">(</span><span class="n">call</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">CallbackQuery</span><span class="p">):</span>
     <span class="k">await</span> <span class="n">call</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)))</span>
 </code></pre></div>
-
 <div class="admonition warning">
 <p class="admonition-title">Важно</p>
 <p>Несмотря на то, что параметр кнопки <code>callback_data</code>, а значение <code>data</code> лежит в одноимённом поле <code>data</code> 
 объекта <a href="https://core.telegram.org/bots/api#callbackquery">CallbackQuery</a>, собственный фильтр aiogram называется <code>text</code>.</p>
 </div>
-<p><img alt="Реакция на нажатие колбэк-кнопки" src="../images/l03_5.png" /></p>
+<p><img alt="Реакция на нажатие колбэк-кнопки" src="../images/buttons/l03_5.png" /></p>
 <p>Ой, а что это за часики? Оказывается, сервер Telegram ждёт от нас подтверждения о доставке колбэка, иначе в течение 30 
 секунд будет показывать специальную иконку. Чтобы скрыть часики, нужно вызвать метод <code>answer()</code> у колбэка (или использовать 
 метод API <code>answer_callback_query()</code>). В общем случае, в метод <code>answer()</code> можно ничего не передавать, но можно вызвать 
 специальное окошко (всплывающее сверху или поверх экрана):</p>
-<div class="codehilite"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">callback_query_handler</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;random_value&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">callback_query_handler</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;random_value&quot;</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">send_random_value</span><span class="p">(</span><span class="n">call</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">CallbackQuery</span><span class="p">):</span>
     <span class="k">await</span> <span class="n">call</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)))</span>
     <span class="k">await</span> <span class="n">call</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Спасибо, что воспользовались ботом!&quot;</span><span class="p">,</span> <span class="n">show_alert</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="c1"># или просто await call.answer()</span>
 </code></pre></div>
-
-<p><img alt="Всплывающее окно при нажатии на колбэк-кнопку" src="../images/l03_6.png" /></p>
+<p><img alt="Всплывающее окно при нажатии на колбэк-кнопку" src="../images/buttons/l03_6.png" /></p>
 <div class="admonition info">
 <p class="admonition-title">Обратите внимание</p>
 <p>В функции <code>send_random_value</code> мы вызывали метод <code>answer()</code> не у <code>message</code>, а у <code>call.message</code>. Это связано с тем, 
@@ -592,7 +597,7 @@
 <p>Перейдём к примеру посложнее. Пусть пользователю предлагается сообщение с числом 0, а внизу три кнопки: +1, -1 и Подтвердить. 
 Первыми двумя он может редактировать число, а последняя удаляет всю клавиатуру, фиксируя изменения. Хранить значения будем 
 в памяти в словаре (про конечные автоматы поговорим как-нибудь <em>в другой раз</em>).</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Здесь хранятся пользовательские данные.</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Здесь хранятся пользовательские данные.</span>
 <span class="c1"># Т.к. это словарь в памяти, то при перезапуске он очистится</span>
 <span class="n">user_data</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -639,56 +644,51 @@
     <span class="c1"># Не забываем отчитаться о получении колбэка</span>
     <span class="k">await</span> <span class="n">call</span><span class="o">.</span><span class="n">answer</span><span class="p">()</span>
 </code></pre></div>
-
 <p>И, казалось бы, всё работает: </p>
-<p><img alt="Всё работает?" src="../images/l03_7.png" /></p>
+<p><img alt="Всё работает?" src="../images/buttons/l03_7.png" /></p>
 <p>Но теперь представим, что ушлый пользователь сделал следующее: вызвал команду <code>/numbers</code> (значение 0), увеличил значение 
 до 1, снова вызвал <code>/numbers</code> (значение сбросилось до 0) и отредактировал нажал кнопку "+1" на первом сообщении. 
 Что произойдёт? Бот по-честному отправит запрос на редактирование текста со значением 1, но т.к. на том сообщении 
 уже стоит цифра 1, то Bot API вернёт ошибку, что старый и новый тексты совпадают, а бот словит исключение: 
 <code>aiogram.utils.exceptions.MessageNotModified: Message is not modified: specified new message content and reply markup 
 are exactly the same as a current content and reply markup of the message</code></p>
-<p><img alt="Всё работает?" src="../images/l03_8.png" /></p>
+<p><img alt="Всё работает?" src="../images/buttons/l03_8.png" /></p>
 <p>С этой ошибкой вы, скорее всего, будете поначалу часто сталкиваться, пытаясь редактировать сообщения. Но, в действительности, 
-решается проблема очень просто: мы проигнорируем исключение <code>MessageNotModified</code>. Из <a href="../01_quickstart/#_3">первой главы</a> вы 
+решается проблема очень просто: мы проигнорируем исключение <code>MessageNotModified</code>. Из <a href="../quickstart/#_3">первой главы</a> вы 
 уже знаете о такой прекрасной штуке, как <code>errors_handler</code>, но в этот раз мы поступим чуть иначе и перепишем 
 функцию <code>update_num_text()</code> следующим образом:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># from aiogram.utils.exceptions import MessageNotModified</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># from aiogram.utils.exceptions import MessageNotModified</span>
 <span class="c1"># from contextlib import suppress</span>
 
 <span class="k">async</span> <span class="k">def</span> <span class="nf">update_num_text</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Message</span><span class="p">,</span> <span class="n">new_value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="k">with</span> <span class="n">suppress</span><span class="p">(</span><span class="n">MessageNotModified</span><span class="p">):</span>
         <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">edit_text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Укажите число: </span><span class="si">{</span><span class="n">new_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">reply_markup</span><span class="o">=</span><span class="n">get_keyboard</span><span class="p">())</span>
 </code></pre></div>
-
 <p>Если теперь вы попробуете повторить пример выше, то указанное исключение в этом блоке кода бот просто-напросто проигнорирует.</p>
 <h3 id="_5">Фабрика колбэков<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <p>В aiogram существует т.н. фабрика колбэков. Вы создаёте объект <code>CallbackData</code>, указываете ему префикс и произвольное 
 количество доп. аргументов, которые в дальнейшем указываете при создании колбэка для кнопки.<br />
-Например, рассмотрим следующий объект:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># from aiogram.utils.callback_data import CallbackData</span>
+Например, рассмотрим следующий объект:
+<div class="highlight"><pre><span></span><code><span class="c1"># from aiogram.utils.callback_data import CallbackData</span>
 <span class="n">cb</span><span class="o">=</span> <span class="n">CallbackData</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">)</span>
 </code></pre></div>
-
-<p>Тогда при создании кнопки вам надо указать её параметры так:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">button</span> <span class="o">=</span>  <span class="n">types</span><span class="o">.</span><span class="n">InlineKeyboardButton</span><span class="p">(</span>
+Тогда при создании кнопки вам надо указать её параметры так:
+<div class="highlight"><pre><span></span><code><span class="n">button</span> <span class="o">=</span>  <span class="n">types</span><span class="o">.</span><span class="n">InlineKeyboardButton</span><span class="p">(</span>
     <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Лайкнуть&quot;</span><span class="p">,</span> 
     <span class="n">callback_data</span><span class="o">=</span><span class="n">cb</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;like&quot;</span><span class="p">)</span>
 <span class="p">)</span>
-</code></pre></div>
-
-<p>В примере выше в кнопку запишется <code>callback_data</code>, равный <code>post:5:like</code>, а хэндлер на префикс <code>post</code> будет выглядеть так:</p>
-<div class="codehilite"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">callback_query_handler</span><span class="p">(</span><span class="n">cb</span><span class="o">.</span><span class="n">filter</span><span class="p">())</span>
+</code></pre></div></p>
+<p>В примере выше в кнопку запишется <code>callback_data</code>, равный <code>post:5:like</code>, а хэндлер на префикс <code>post</code> будет выглядеть так:
+<div class="highlight"><pre><span></span><code><span class="nd">@dp</span><span class="o">.</span><span class="n">callback_query_handler</span><span class="p">(</span><span class="n">cb</span><span class="o">.</span><span class="n">filter</span><span class="p">())</span>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">callbacks</span><span class="p">(</span><span class="n">call</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">CallbackQuery</span><span class="p">,</span> <span class="n">callback_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
     <span class="n">post_id</span> <span class="o">=</span> <span class="n">callback_data</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
     <span class="n">action</span> <span class="o">=</span> <span class="n">callback_data</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">]</span>
-</code></pre></div>
-
+</code></pre></div></p>
 <p>В предыдущем примере с числами мы грамотно выбрали <code>callback_data</code>, поэтому смогли легко запихнуть все обработчики 
 в один хэндлер. Но можно логически разнести обработку инкремента и декремента от обработки нажатия на кнопку "Подтвердить". 
 Для этого в фильтре фабрики можно указать желаемые значения какого-либо параметра. Давайте перепишем наш пример 
 с использоваанием фабрики:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># fabnum - префикс, action - название аргумента, которым будем передавать значение</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># fabnum - префикс, action - название аргумента, которым будем передавать значение</span>
 <span class="n">callback_numbers</span> <span class="o">=</span> <span class="n">CallbackData</span><span class="p">(</span><span class="s2">&quot;fabnum&quot;</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">)</span>
 
 
@@ -733,7 +733,6 @@ are exactly the same as a current content and reply markup of the message</code>
     <span class="k">await</span> <span class="n">call</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">edit_text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Итого: </span><span class="si">{</span><span class="n">user_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">await</span> <span class="n">call</span><span class="o">.</span><span class="n">answer</span><span class="p">()</span>
 </code></pre></div>
-
 <p>На этом глава про кнопки окончена, но про некоторые других их виды мы поговорим в следующих главах.</p>
                 
                   
@@ -755,7 +754,7 @@ are exactly the same as a current content and reply markup of the message</code>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../02_messages/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../messages/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -769,6 +768,20 @@ are exactly the same as a current content and reply markup of the message</code>
             </div>
           </a>
         
+        
+          <a href="../fsm/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Вперед
+                </span>
+                Конечные автоматы
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
         
       </nav>
     </div>
